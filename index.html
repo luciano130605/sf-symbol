@@ -5,8 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="color-scheme" content="dark light">
-  <meta name="theme-color" content="#0c1019">
-  <link rel="stylesheet" href="https://use.hugeicons.com/font/icons.css">
+  <meta name="theme-color" content="#0b0b0c">
+  <link rel="icon" type="image/svg+xml" href="https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/sparkles.svg">
   <title>Symbol Studio — Explorador de SF Symbols para Expo</title>
   <style>
     :root {
@@ -354,6 +354,12 @@
       transition: border .2s, box-shadow .2s
     }
 
+    .search-wrap:has(#search:not(:placeholder-shown)) .clear-search {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1)
+    }
+
     .search-wrap:focus-within {
       border-color: var(--accent);
       box-shadow: 0 0 0 4px rgba(var(--accent-rgb), .1)
@@ -388,6 +394,23 @@
       padding: 3px 7px;
       white-space: nowrap
     }
+
+    .clear-search {
+      width: 28px;
+      height: 28px;
+      border: 0;
+      border-radius: 8px;
+      color: var(--muted);
+      background: var(--field);
+      font-size: 17px;
+      line-height: 1;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(.85);
+      transition: opacity .16s, transform .16s, color .16s, background .16s
+    }
+
+    .clear-search:hover { background: rgba(var(--accent-rgb), .16); color: var(--accent) }
 
     .quick {
       display: flex;
@@ -473,6 +496,30 @@
       margin-bottom: 20px
     }
 
+    .filter-groups { display: flex; align-items: center; gap: 9px; flex-wrap: wrap }
+    .filter-mode { display: flex; align-items: center; gap: 7px; color: var(--muted); font-size: 11px }
+    .filter-mode .segment button { padding-inline: 10px }
+
+    .filter-panel {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 0 0 12px;
+      padding: 10px 12px 10px 15px;
+      border: 1px solid var(--line-soft);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--panel) 82%, transparent)
+    }
+
+    .filter-context { min-width: 0 }
+    .filter-context strong { display: block; font-size: 12px; letter-spacing: -.1px }
+    .filter-context span { display: block; margin-top: 1px; color: var(--muted); font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+    .filter-actions { display: flex; align-items: center; gap: 8px; flex: none }
+    .topic-select { max-width: 205px }
+    .reset-inline { border: 0; background: transparent; color: var(--accent); font-size: 11px; font-weight: 750; padding: 7px 5px; white-space: nowrap }
+    .reset-inline[hidden] { display: none }
+
     .segment {
       display: inline-flex;
       gap: 2px;
@@ -494,7 +541,7 @@
 
     .segment button.active {
       background: var(--field);
-      color: var(--text);
+      color: var(--accent);
       box-shadow: 0 1px 7px rgba(0, 0, 0, .07)
     }
 
@@ -1062,6 +1109,10 @@
         display: none
       }
 
+      .filter-panel { align-items: stretch; flex-direction: column; gap: 8px }
+      .filter-actions { width: 100% }
+      .topic-select { flex: 1; max-width: none }
+
       .grid {
         grid-template-columns: repeat(auto-fill, minmax(125px, 1fr));
         gap: 9px
@@ -1098,6 +1149,169 @@
       }
     }
 
+    /* Simple utility-first visual system */
+    :root {
+      --bg: #f7f8fa;
+      --sidebar: #ffffff;
+      --panel: #ffffff;
+      --panel-hover: #f3f5f8;
+      --field: #f0f2f5;
+      --line: #dfe3e8;
+      --line-soft: #e9ecf0;
+      --text: #20242b;
+      --muted: #667085;
+      --faint: #98a2b3;
+      --accent: #2563eb;
+      --accent-rgb: 37, 99, 235;
+      --accent-ink: #ffffff;
+      --shadow: 0 12px 30px rgba(16, 24, 40, .10);
+      --radius: 12px
+    }
+
+    body { font-family: Inter, "Segoe UI", Arial, sans-serif; font-size: 14px }
+    body, .sidebar, .topbar, .symbol-card, .tool-btn, .select, .filter-panel, .stat, .drawer, .search-wrap, .segment, .sidebar-note {
+      transition: background-color .2s ease, border-color .2s ease, color .2s ease
+    }
+    .layout { grid-template-columns: 224px minmax(0, 1fr) }
+    .sidebar { padding: 22px 12px; border-right-color: var(--line); box-shadow: none }
+    .brand { padding: 2px 10px 22px; gap: 9px }
+    .brand-logo { width: 30px; height: 30px; border-radius: 7px; background: #20242b; box-shadow: none; font-size: 15px }
+    .brand strong { font-size: 14px; letter-spacing: -.25px }
+    .brand small { margin-top: 1px; font-size: 9px; letter-spacing: 1.2px }
+    .navtitle { padding: 16px 10px 7px; font-size: 9px; letter-spacing: 1.25px }
+    .nav-item { gap: 9px; padding: 8px 10px; border-radius: 7px; font-size: 12px }
+    .nav-item .nav-emoji { display: none }
+    .nav-sf, .sf-ui {
+      width: 16px;
+      height: 16px;
+      flex: none;
+      display: inline-block;
+      background: currentColor;
+      -webkit-mask-image: var(--icon-url);
+      mask-image: var(--icon-url);
+      -webkit-mask-size: contain;
+      mask-size: contain;
+      -webkit-mask-repeat: no-repeat;
+      mask-repeat: no-repeat;
+      -webkit-mask-position: center;
+      mask-position: center
+    }
+    .search-ico, .state .sf-ui {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      flex: none;
+      background: var(--muted);
+      -webkit-mask: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/magnifyingglass.svg") center / contain no-repeat;
+      mask: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/magnifyingglass.svg") center / contain no-repeat
+    }
+    .state .sf-ui { width: 32px; height: 32px; margin-bottom: 10px; background: var(--faint) }
+    #themeToggle { font-size: 0 }
+    #themeToggle::before, .fav::before {
+      content: "";
+      display: block;
+      width: 16px;
+      height: 16px;
+      background: currentColor;
+      -webkit-mask: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/sun-max.svg") center / contain no-repeat;
+      mask: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/sun-max.svg") center / contain no-repeat
+    }
+    body.light #themeToggle::before {
+      -webkit-mask-image: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/moon.svg");
+      mask-image: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/moon.svg")
+    }
+    .fav::before {
+      -webkit-mask-image: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/star.svg");
+      mask-image: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/star.svg")
+    }
+    .fav { font-size: 0; color: var(--faint) }
+    .fav.is-fav { color: #d97706 }
+    .fav.is-fav::before {
+      -webkit-mask-image: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/star-fill.svg");
+      mask-image: url("https://cdn.jsdelivr.net/gh/technonyte00/sf-symbols@main/icons/star-fill.svg")
+    }
+    .nav-item.active { background: #eef4ff; color: #1d4ed8; font-weight: 650 }
+    .sidebar-note { margin: 23px 4px 0; border-radius: 9px; background: var(--field); padding: 12px }
+    .main:before { display: none }
+    .topbar { height: 60px; background: color-mix(in srgb, var(--panel) 94%, transparent); backdrop-filter: blur(8px); padding: 0 clamp(20px, 4vw, 46px); border-bottom-color: var(--line) }
+    .tool-btn { min-height: 34px; border-radius: 7px; box-shadow: none; font-weight: 600 }
+    .tool-btn.icon-only { width: 34px; font-size: 15px }
+    .app-content { max-width: 1440px; padding: 38px clamp(20px, 4vw, 46px) 56px }
+    .eyebrow { font-size: 10px; letter-spacing: 1.25px; color: var(--muted) }
+    .eyebrow i { width: 6px; height: 6px; box-shadow: none; background: var(--accent) }
+    h1 { margin: 11px 0 9px; font-size: clamp(28px, 3.5vw, 40px); letter-spacing: -1.45px; font-weight: 720 }
+    h1 em { color: inherit }
+    .hero p { max-width: 620px; margin-bottom: 22px; font-size: 14px; line-height: 1.6 }
+    .search-wrap { height: 52px; max-width: 760px; padding: 0 13px 0 17px; border-radius: 9px; box-shadow: none }
+    .search-wrap:focus-within { box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .12) }
+    .search-ico { font-size: 18px }
+    .shortcut { border: 0; background: var(--field); border-radius: 5px; padding: 3px 6px }
+    .quick { margin-top: 11px; gap: 6px }
+    .quick .chip { padding: 5px 9px; border-radius: 6px; background: var(--panel); font-size: 11px }
+    .stats { max-width: none; grid-template-columns: repeat(3, minmax(0, 180px)); gap: 0; margin: 27px 0 34px; border: 1px solid var(--line); border-radius: 9px; overflow: hidden }
+    .stat { border: 0; border-right: 1px solid var(--line); border-radius: 0; background: var(--panel); padding: 12px 15px }
+    .stat:last-child { border-right: 0 }
+    .stat .n { font-size: 20px; font-weight: 700 }
+    .section-heading { margin-bottom: 13px }
+    .section-heading h2 { font-size: 18px; letter-spacing: -.35px }
+    .controls { align-items: flex-start; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--line-soft) }
+    .segment { padding: 3px; border-radius: 7px; background: var(--field); border: 0 }
+    .segment button { padding: 6px 10px; border-radius: 5px; font-size: 11px }
+    .segment button.active { background: var(--panel); color: var(--text); box-shadow: 0 1px 2px rgba(16,24,40,.12) }
+    .select { border-radius: 7px; padding: 8px 10px; background: var(--panel) }
+    .filter-panel { margin-bottom: 16px; padding: 10px 12px; border-radius: 8px; background: #fbfcfd }
+    .grid { grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px }
+    .symbol-card { min-height: 142px; gap: 12px; border-radius: 9px; padding: 15px 9px 12px; box-shadow: none }
+    .symbol-card:hover { transform: none; box-shadow: 0 2px 8px rgba(16,24,40,.08); border-color: #b7c5df }
+    .glyph-holder { height: 64px }
+    .glyph { background: #344054 }
+    .name { font-size: 11px; min-height: 28px; color: #475467 }
+    .fav { top: 6px; right: 6px; border-radius: 5px }
+    .card-copy { top: 7px; left: 7px; padding: 3px 6px; border-radius: 4px; font-size: 10px }
+    .drawer { background: var(--panel); padding: 22px; box-shadow: var(--shadow) }
+    .drawer-preview { min-height: 215px; border-radius: 10px; background: var(--field) }
+    .drawer-preview .glyph { background: var(--accent) }
+    .footnote { margin-top: 24px; padding-top: 18px }
+
+    @media(max-width:650px) {
+      .topbar { background: var(--panel) }
+      .app-content { padding-top: 27px }
+      .stats { grid-template-columns: repeat(3, 1fr) }
+      .stat { padding: 11px 8px }
+      .filter-groups { width: 100% }
+      .filter-mode { justify-content: space-between; flex: 1 }
+      .nav-item .nav-sf { display: inline-block }
+    }
+
+    @media (min-width:651px) and (max-width:980px) {
+      .layout { grid-template-columns: 190px minmax(0, 1fr) }
+      .sidebar { padding: 20px 10px }
+      .brand .brandtext, .navtitle, .nav-label, .sidebar-note { display: block !important }
+      .nav-item { justify-content: flex-start; padding: 8px 10px }
+    }
+
+    body.light {
+      --bg: #f7f8fa; --sidebar: #ffffff; --panel: #ffffff; --panel-hover: #f3f5f8; --field: #f0f2f5;
+      --line: #dfe3e8; --line-soft: #e9ecf0; --text: #20242b; --muted: #667085; --faint: #98a2b3;
+      --accent: #2563eb; --accent-rgb: 37, 99, 235; --accent-ink: #ffffff
+      color-scheme: light
+    }
+
+    body:not(.light) {
+      --bg: #0b0b0c; --sidebar: #101012; --panel: #151517; --panel-hover: #1b1b1f; --field: #202024;
+      --line: #2b2b30; --line-soft: #222226; --text: #f5f5f6; --muted: #a1a1aa; --faint: #707078;
+      --accent: #a5b4fc; --accent-rgb: 165, 180, 252; --accent-ink: #11111a
+      color-scheme: dark
+    }
+
+    body:not(.light) .nav-item.active { background: rgba(165, 180, 252, .13); color: var(--accent) }
+    body:not(.light) .filter-panel { background: #111113 }
+    body:not(.light) .symbol-card:hover { border-color: #555563; box-shadow: 0 6px 18px rgba(0,0,0,.24) }
+    body:not(.light) .glyph { background: #d7defd }
+    body:not(.light) .name { color: #c4c4cc }
+    body:not(.light) .stats { border-color: var(--line) }
+    body:not(.light) .sidebar-note { background: #171719 }
+
     @media(prefers-reduced-motion:reduce) {
 
       *,
@@ -1115,7 +1329,7 @@
   <div class="layout">
     <aside class="sidebar" aria-label="Categorías">
       <div class="brand">
-        <div class="brand-logo" aria-hidden="true">✳</div>
+        <div class="brand-logo" aria-hidden="true">S</div>
         <div class="brandtext"><strong>Symbol Studio</strong><small>FOR EXPO / iOS</small></div>
       </div>
       <nav id="nav"></nav>
@@ -1133,18 +1347,16 @@
             catálogo…</span><button type="button" class="tool-btn icon-only" id="themeToggle" title="Cambiar tema"
             aria-label="Cambiar tema">☾</button><a class="tool-btn hide-mobile"
             href="https://developer.apple.com/sf-symbols/" target="_blank" rel="noopener">Apple SF Symbols ↗</a><a
-            class="tool-btn hide-mobile" href="https://github.com/luciano130605" target="_blank" rel="noopener"><i
-              class="hgi hgi-stroke hgi-rounded hgi-github"></i></a></div>
+            class="tool-btn hide-mobile" href="https://github.com/luciano130605" target="_blank" rel="noopener">GitHub</a></div>
       </div>
       <div class="app-content">
         <section class="hero">
-          <div class="eyebrow"><i></i> ICON BROWSER / PARA WINDOWS</div>
-          <h1>El símbolo perfecto,<br><em>encontralo acá.</em></h1>
-          <p>Explorá miles de SF Symbols con vista previa, buscá por nombre o en español y copiá directamente el código
-            de Expo React Native. Sin necesitar una Mac.</p>
-          <div class="search-wrap"><span class="search-ico">⌕</span><input id="search" type="search"
+          <div class="eyebrow"><i></i> Catálogo de SF Symbols</div>
+          <h1>Buscá el ícono que necesitás.</h1>
+          <p>Encontrá símbolos por nombre, tema o estilo y copiá el código para usarlo en Expo.</p>
+          <div class="search-wrap"><span class="search-ico" aria-hidden="true"></span><input id="search" type="search"
               aria-label="Buscar símbolos" placeholder="Buscar: duplicar, avión, clima, slider…" autocomplete="off"
-              spellcheck="false"><span class="shortcut">Ctrl K</span></div>
+              spellcheck="false"><button type="button" id="clearSearch" class="clear-search" aria-label="Limpiar busqueda" title="Limpiar busqueda">&times;</button><span class="shortcut">Ctrl K</span></div>
           <div class="quick"><span class="label">Probá con</span><button class="chip"
               data-query="duplicar">Duplicar</button><button class="chip" data-query="airplane">Viajes</button><button
               class="chip" data-query="weather">Clima</button><button class="chip"
@@ -1172,8 +1384,8 @@
           </div>
         </div>
         <div class="controls">
-          <div class="segment" aria-label="Variantes"><button class="active" data-variant="all">Todos</button><button
-              data-variant="fill">Rellenos</button><button data-variant="outline">Contornos</button></div>
+          <div class="filter-groups"><div class="segment" aria-label="Variantes"><button class="active" data-variant="all">Todos</button><button
+              data-variant="fill">Rellenos</button><button data-variant="outline">Contornos</button></div><div class="filter-mode"><span>Buscar</span><div class="segment" aria-label="Modo de coincidencia"><button class="active" data-match="all">Todas</button><button data-match="any">Cualquiera</button></div></div></div>
           <div class="controls-right"><label for="previewSize">Tamaño</label><input id="previewSize" type="range"
               min="24" max="59" value="37" aria-label="Tamaño de vista previa"><select id="sort" class="select"
               aria-label="Orden">
@@ -1182,8 +1394,12 @@
               <option value="za">Nombre Z–A</option>
             </select></div>
         </div>
+        <div class="filter-panel" aria-label="Resumen de filtros">
+          <div class="filter-context"><strong id="filterLabel">Explora toda la biblioteca</strong><span id="filterHint">Usa una categoria, estilo o palabra para acotar los resultados.</span></div>
+          <div class="filter-actions"><select id="topicSelect" class="select topic-select" aria-label="Filtrar por categoria"></select><button type="button" id="resetInline" class="reset-inline" hidden>Limpiar filtros</button></div>
+        </div>
         <div id="grid" class="grid" aria-live="polite"></div>
-        <div id="empty" class="state" hidden><span class="big">⌕</span><strong>No hay símbolos que coincidan</strong>
+        <div id="empty" class="state" hidden><span class="big sf-ui" aria-hidden="true"></span><strong>No hay símbolos que coincidan</strong>
           <p>Probá otra palabra o quitá los filtros.</p><button id="resetFilters">Restablecer filtros</button>
         </div>
         <div id="sentinel" class="sentinel"></div>
@@ -1211,8 +1427,8 @@
     <div class="mono-line"><code id="symbolCode"></code><button id="copyName" class="mini-copy">Copiar</button></div>
     <div class="detail-label">Ejemplo de código Expo</div>
     <pre id="expoCode" class="code-preview"></pre>
-    <div class="detail-actions"><button id="copyExpo" class="primary">⧉ Copiar componente</button><button id="favDetail"
-        class="tool-btn">☆ Favorito</button></div>
+    <div class="detail-actions"><button id="copyExpo" class="primary">Copiar componente</button><button id="favDetail"
+        class="tool-btn">Guardar</button></div>
     <p class="drawer-tip">Pegá este <code>name</code> en <code>&lt;SymbolView /&gt;</code>. En Android, considerá
       proporcionar un símbolo alternativo con <code>name={{ ios: '...', android: '...' }}</code> cuando corresponda.</p>
   </aside>
@@ -1226,20 +1442,20 @@
       // Se ofrecen nombres de ejemplo para cuando el manifiesto remoto no pueda cargarse.
       const STARTER = `airplane airplane.departure airplane.arrival airplane.circle airplane.circle.fill airplane.ticket airplane.ticket.fill tram tram.fill tram.circle bus bus.fill car car.fill car.side car.side.fill car.rear car.rear.fill taxi ferry train.side.front.car train.side.middle.car train.side.rear.car figure.walk figure.walk.circle bicycle scooter luggage luggage.fill suitcase suitcase.fill suitcase.rolling suitcase.rolling.fill bag bag.fill handbag handbag.fill backpack backpack.fill map map.fill map.circle globe.americas globe.europe.africa globe.asia.australia mappin mappin.circle mappin.circle.fill mappin.and.ellipse location location.fill location.circle location.circle.fill location.north line.diagonal road.lanes arrow.triangle.turn.up.right.diamond compass.drawing compass arrow.triangle.branch clock clock.fill clock.arrow.circlepath calendar calendar.badge.plus calendar.badge.clock calendar.circle list.bullet.rectangle list.bullet.clipboard checklist checkmark checkmark.circle checkmark.circle.fill checkmark.seal checkmark.square checkmark.square.fill xmark xmark.circle xmark.circle.fill plus plus.circle plus.circle.fill minus minus.circle square.on.square square.on.square.fill plus.square.on.square doc.on.doc doc.on.doc.fill rectangle.on.rectangle square.and.arrow.up square.and.arrow.down square.and.pencil square.and.pencil.circle pencil pencil.circle pencil.tip pencil.line rectangle.and.pencil.and.ellipsis doc doc.fill doc.text doc.text.fill doc.plaintext doc.richtext doc.badge.plus doc.on.clipboard folder folder.fill folder.badge.plus paperclip link link.circle qr.code qrcode barcode.viewfinder ticket ticket.fill creditcard creditcard.fill wallet.pass wallet.pass.fill dollarsign.circle euro.circle banknote banknote.fill coinsign.circle cart cart.fill basket basket.fill bag.circle tag tag.fill receipt receipt.fill gift gift.fill shippingbox shippingbox.fill shippingbox.circle bed.double bed.double.fill building.2 building.2.fill building.columns building.columns.fill house house.fill house.circle house.lodge door.left.hand.open door.right.hand.closed key key.fill key.horizontal lock lock.fill lock.open lock.open.fill wifi wifi.slash network globe network.badge.shield.half.filled ipad iphone applewatch desktopcomputer laptopcomputer macbook iphone.gen3 airplane.mode antenna.radiowaves.left.and.right antenna.radiowaves.left.and.right.circle bolt bolt.fill battery.100percent battery.50percent battery.25percent battery.0percent power socket.2 usbplug plug plug.fill cable.connector paperplane paperplane.fill envelope envelope.fill envelope.open bubble.left bubble.left.fill bubble.right bubble.right.fill bubble.left.and.bubble.right bubble.left.and.bubble.right.fill message message.fill phone phone.fill phone.arrow.up.right phone.circle mic mic.fill mic.slash speaker.wave.2 speaker.wave.2.fill speaker.slash speaker.slash.fill headphones headphone radio waveform waveform.circle video video.fill camera camera.fill camera.circle photo photo.fill photo.on.rectangle photos photo.stack photo.on.rectangle.angled photo.badge.plus eye eye.fill eye.slash eye.slash.fill face.smiling face.smiling.fill person person.fill person.circle person.circle.fill person.2 person.2.fill person.3 person.3.fill person.crop.circle person.crop.circle.fill figure.stand figure.run figure.hiking figure.walk.motion figure.swim dumbbell dumbbell.fill heart heart.fill heart.circle heart.text.square cross.case cross.case.fill pills pills.fill bandage bandage.fill thermometer sun.max sun.max.fill sun.horizon sun.horizon.fill moon moon.fill moon.stars moon.stars.fill cloud cloud.fill cloud.sun cloud.sun.fill cloud.rain cloud.rain.fill cloud.drizzle cloud.bolt cloud.snow snowflake wind humidity raindrop raindrop.fill umbrella umbrella.fill tornado rainbow sunrise sunset thermometer.sun thermometer.snowflake water.waves flame flame.fill fork.knife fork.knife.circle cup.and.saucer cup.and.saucer.fill wineglass wineglass.fill takeoutbag.and.cup.and.straw birthday.cake birthday.cake.fill leaf leaf.fill tree tree.fill mountain.2 mountain.2.fill fish fish.fill pawprint pawprint.fill dog dog.fill cat cat.fill bird bird.fill book book.fill book.closed book.closed.fill text.book.closed text.book.closed.fill magnifyingglass magnifyingglass.circle slider.horizontal.3 slider.vertical.3 slider.horizontal.2.square slider.horizontal.below.rectangle line.3.horizontal.decrease line.3.horizontal.decrease.circle line.3.horizontal line.3.horizontal.decrease.circle.fill line.3.horizontal.circle gear gearshape gearshape.fill gearshape.2 gearshape.2.fill ellipsis ellipsis.circle ellipsis.circle.fill ellipsis.vertical square.grid.2x2 square.grid.2x2.fill square.grid.3x3 square.grid.3x3.fill rectangle.grid.1x2 chart.bar chart.bar.fill chart.pie chart.pie.fill chart.line.uptrend.xyaxis arrow.up.arrow.down arrow.left.arrow.right arrow.clockwise arrow.counterclockwise arrow.triangle.2.circlepath arrow.uturn.backward arrow.up.right arrow.up.left arrow.down.right arrow.down.left arrow.left arrow.right arrow.up arrow.down chevron.left chevron.right chevron.up chevron.down chevron.backward chevron.forward chevron.up.chevron.down bell bell.fill bell.badge bell.badge.fill bell.slash bell.slash.fill star star.fill star.circle star.circle.fill heart.text.clipboard flag flag.fill bookmark bookmark.fill tray tray.fill archivebox archivebox.fill trash trash.fill trash.circle trash.circle.fill square.stack square.stack.fill square.stack.3d.up square.stack.3d.up.fill rectangle.stack rectangle.stack.fill circle.fill square.fill triangle.fill diamond.fill circle.hexagongrid hexagon.fill lightbulb lightbulb.fill sparkles wand.and.stars wand.and.rays faceid touchid externaldrive externaldrive.fill server.rack info.circle info.circle.fill questionmark.circle questionmark.circle.fill exclamationmark.triangle exclamationmark.triangle.fill checkmark.shield checkmark.shield.fill shield shield.fill hand.thumbsup hand.thumbsup.fill paintpalette paintpalette.fill paintbrush paintbrush.fill eyedropper cursorarrow cursorarrow.rays pointer.arrow.pointer.2.squarepath questionmark.folder`;
       const CAT = [
-        { id: 'all', label: 'Todos los símbolos', emoji: '▦' },
-        { id: 'favorites', label: 'Mis favoritos', emoji: '☆' },
-        { id: 'travel', label: 'Viajes y mapas', emoji: '✈', rx: /airplane|luggage|suitcase|globe|map|mappin|location|compass|ticket|passport|figure\.hiking|mountain|safari/ },
-        { id: 'transport', label: 'Transporte', emoji: '⇢', rx: /tram|train|car\.|^car$|bus|ferry|taxi|bicycle|scooter|fuelpump|road|steeringwheel|airplane|figure\.walk|figure\.run/ },
-        { id: 'hotel', label: 'Hospedaje', emoji: '⌂', rx: /bed|house|building|door|key\.|^key$|hotel|lamp\.table|sofa|shower|bathtub|toilet/ },
-        { id: 'weather', label: 'Clima y naturaleza', emoji: '☼', rx: /sun|moon|cloud|snow|rain|wind|humidity|thermometer|umbrella|hurricane|tornado|rainbow|leaf|tree|water|mountain|flame/ },
-        { id: 'food', label: 'Comida y bebidas', emoji: '☕', rx: /fork|knife|cup|mug|wineglass|takeout|birthday\.cake|carrot|fish|popcorn|waterbottle|refrigerator/ },
-        { id: 'people', label: 'Personas y salud', emoji: '♙', rx: /person|figure|heart|cross|pills|bandage|stethoscope|dumbbell|facemask|medical|brain|lungs|hand\./ },
-        { id: 'documents', label: 'Documentos', emoji: '▤', rx: /doc|folder|paperclip|clipboard|book|printer|text\.book|archivebox|tray/ },
-        { id: 'money', label: 'Compras y dinero', emoji: '＄', rx: /creditcard|wallet|banknote|dollarsign|eurosign|cart|basket|gift|receipt|tag|bag\.|^bag$|shippingbox|payment/ },
-        { id: 'messages', label: 'Mensajes y multimedia', emoji: '☏', rx: /message|bubble|envelope|phone|mic|camera|video|photo|music|speaker|paperplane|waveform|headphone/ },
-        { id: 'settings', label: 'Controles y ajustes', emoji: '⚙', rx: /slider|gear|line\.3\.horizontal|switch|toggle|ellipsis|magnifyingglass|paintbrush|checkmark|xmark|plus|minus|lock|shield|bell/ },
-        { id: 'arrows', label: 'Flechas y formas', emoji: '◇', rx: /arrow|chevron|square|circle|rectangle|triangle|diamond|hexagon|star|shape|seal/ },
-        { id: 'tech', label: 'Tecnología', emoji: '⌘', rx: /iphone|ipad|mac|desktop|laptop|display|wifi|network|battery|bolt|plug|cable|antenna|router|server|keyboard|mouse|airpods|applewatch/ },
+        { id: 'all', label: 'Todos los símbolos', sf: 'square-grid-2x2' },
+        { id: 'favorites', label: 'Mis favoritos', sf: 'star' },
+        { id: 'travel', label: 'Viajes y mapas', sf: 'airplane', rx: /airplane|luggage|suitcase|globe|map|mappin|location|compass|ticket|passport|figure\.hiking|mountain|safari/ },
+        { id: 'transport', label: 'Transporte', sf: 'car', rx: /tram|train|car\.|^car$|bus|ferry|taxi|bicycle|scooter|fuelpump|road|steeringwheel|airplane|figure\.walk|figure\.run/ },
+        { id: 'hotel', label: 'Hospedaje', sf: 'bed-double', rx: /bed|house|building|door|key\.|^key$|hotel|lamp\.table|sofa|shower|bathtub|toilet/ },
+        { id: 'weather', label: 'Clima y naturaleza', sf: 'cloud-sun', rx: /sun|moon|cloud|snow|rain|wind|humidity|thermometer|umbrella|hurricane|tornado|rainbow|leaf|tree|water|mountain|flame/ },
+        { id: 'food', label: 'Comida y bebidas', sf: 'fork-knife', rx: /fork|knife|cup|mug|wineglass|takeout|birthday\.cake|carrot|fish|popcorn|waterbottle|refrigerator/ },
+        { id: 'people', label: 'Personas y salud', sf: 'person', rx: /person|figure|heart|cross|pills|bandage|stethoscope|dumbbell|facemask|medical|brain|lungs|hand\./ },
+        { id: 'documents', label: 'Documentos', sf: 'doc', rx: /doc|folder|paperclip|clipboard|book|printer|text\.book|archivebox|tray/ },
+        { id: 'money', label: 'Compras y dinero', sf: 'creditcard', rx: /creditcard|wallet|banknote|dollarsign|eurosign|cart|basket|gift|receipt|tag|bag\.|^bag$|shippingbox|payment/ },
+        { id: 'messages', label: 'Mensajes y multimedia', sf: 'message', rx: /message|bubble|envelope|phone|mic|camera|video|photo|music|speaker|paperplane|waveform|headphone/ },
+        { id: 'settings', label: 'Controles y ajustes', sf: 'gearshape', rx: /slider|gear|line\.3\.horizontal|switch|toggle|ellipsis|magnifyingglass|paintbrush|checkmark|xmark|plus|minus|lock|shield|bell/ },
+        { id: 'arrows', label: 'Flechas y formas', sf: 'arrow-right', rx: /arrow|chevron|square|circle|rectangle|triangle|diamond|hexagon|star|shape|seal/ },
+        { id: 'tech', label: 'Tecnología', sf: 'desktopcomputer', rx: /iphone|ipad|mac|desktop|laptop|display|wifi|network|battery|bolt|plug|cable|antenna|router|server|keyboard|mouse|airpods|applewatch/ },
       ];
       const SYNS = {
         duplicar: ['square-on-square', 'plus-square-on-square', 'doc-on-doc', 'rectangle-on-rectangle'], copiar: ['square-on-square', 'doc-on-doc', 'document'], copia: ['square-on-square', 'doc-on-doc'],
@@ -1264,8 +1480,8 @@
       const $ = id => document.getElementById(id);
       const storage = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback } catch { return fallback } };
       let favorites = new Set(storage('symbol-studio-favs', []));
-      let mode = storage('symbol-studio-theme', 'dark'); if (mode === 'light') document.body.classList.add('light');
-      let all = [], filtered = [], shown = 0, category = 'all', variant = 'all', selected = null, loading = true, loadedSource = '';
+      let mode = storage('symbol-studio-theme-v2', 'dark'); if (mode === 'light') document.body.classList.add('light');
+      let all = [], filtered = [], shown = 0, category = 'all', variant = 'all', matchMode = 'all', selected = null, loading = true, loadedSource = '', showingSimilar = false;
       let size = 37; let toastTimer = 0; let searchTimer = 0;
       function svgUrl(file) { return REMOTE_BASE + 'icons/' + encodeURIComponent(file) + '.svg' }
       function nativeName(file) { return file.replaceAll('-', '.') }
@@ -1276,32 +1492,39 @@
       function saveFav() { try { localStorage.setItem('symbol-studio-favs', JSON.stringify([...favorites])) } catch { } $('favStat').textContent = fmt(favorites.size) }
       const visObs = new IntersectionObserver(es => { for (const e of es) { if (e.isIntersecting) { visObs.unobserve(e.target); const g = e.target.querySelector('.glyph'); if (g) glyphSrc(g, e.target.dataset.file) } } }, { rootMargin: '420px' });
       const moreObs = new IntersectionObserver(es => { if (es[0].isIntersecting && shown < filtered.length) renderMore() }, { rootMargin: '500px' });
-      function createNav() { const nav = $('nav'); nav.textContent = ''; for (const cat of CAT) { if (cat.id === 'travel') { const h = document.createElement('div'); h.className = 'navtitle'; h.textContent = 'Descubrir por tema'; nav.append(h) } else if (cat.id === 'all') { const h = document.createElement('div'); h.className = 'navtitle'; h.textContent = 'Biblioteca'; nav.append(h) } const b = document.createElement('button'); b.className = 'nav-item' + (cat.id === category ? ' active' : ''); b.type = 'button'; b.dataset.category = cat.id; b.innerHTML = '<span class="nav-emoji" aria-hidden="true">' + cat.emoji + '</span><span class="nav-label"></span>'; b.querySelector('.nav-label').textContent = cat.label; if (cat.id === 'favorites') { const count = document.createElement('span'); count.className = 'nav-count'; count.textContent = favorites.size; b.append(count) } b.addEventListener('click', () => { category = cat.id; createNav(); filter(); window.scrollTo({ top: Math.min(window.scrollY, 560), behavior: 'smooth' }) }); nav.append(b) } }
+      function createNav() { const nav = $('nav'); nav.textContent = ''; for (const cat of CAT) { if (cat.id === 'travel') { const h = document.createElement('div'); h.className = 'navtitle'; h.textContent = 'Descubrir por tema'; nav.append(h) } else if (cat.id === 'all') { const h = document.createElement('div'); h.className = 'navtitle'; h.textContent = 'Biblioteca'; nav.append(h) } const b = document.createElement('button'); b.className = 'nav-item' + (cat.id === category ? ' active' : ''); b.type = 'button'; b.dataset.category = cat.id; b.innerHTML = '<span class="nav-sf" aria-hidden="true"></span><span class="nav-label"></span>'; glyphSrc(b.querySelector('.nav-sf'), cat.sf); b.querySelector('.nav-label').textContent = cat.label; if (cat.id === 'favorites') { const count = document.createElement('span'); count.className = 'nav-count'; count.textContent = favorites.size; b.append(count) } b.addEventListener('click', () => { category = cat.id; createNav(); filter(); window.scrollTo({ top: Math.min(window.scrollY, 560), behavior: 'smooth' }) }); nav.append(b) } }
+      function createTopicSelect() { const select = $('topicSelect'); if (!select) return; for (const cat of CAT) { const option = document.createElement('option'); option.value = cat.id; option.textContent = cat.id === 'all' ? 'Todas las categorias' : cat.label; select.append(option) } select.addEventListener('change', () => { category = select.value; createNav(); filter() }) }
+      function updateFilterUI(terms) { const cat = CAT.find(x => x.id === category) || CAT[0]; const parts = []; if (terms.length) parts.push('"' + $('search').value.trim() + '"'); if (terms.length > 1 && matchMode === 'any') parts.push('cualquier palabra'); if (category !== 'all') parts.push(cat.label); if (variant !== 'all') parts.push(variant === 'fill' ? 'rellenos' : 'contornos'); const active = parts.length > 0; $('topicSelect').value = category; $('filterLabel').textContent = active ? 'Filtros activos: ' + parts.join(' · ') : 'Explora toda la biblioteca'; $('filterHint').textContent = active ? fmt(filtered.length) + ' resultados disponibles' : 'Usa una categoria, estilo o palabra para acotar los resultados.'; $('resetInline').hidden = !active }
       function tokensOf(q) { return q.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().split(/\s+/).filter(Boolean) }
-      function matchScore(name, terms) { if (!terms.length) return 0; let score = 0; for (const t of terms) { const syns = [t, ...(SYNS[t] || [])]; let best = 1e9; for (let i = 0; i < syns.length; i++) { const x = syns[i].replaceAll('.', '-'); const at = name.indexOf(x); if (at >= 0) best = Math.min(best, at * 1.2 + i * 12 + (name === x ? -24 : 0)) } if (best === 1e9) return -1; score += best } return score }
+      function editDistance(a, b) { const row = Array.from({ length: b.length + 1 }, (_, i) => i); for (let i = 1; i <= a.length; i++) { let prev = row[0]; row[0] = i; for (let j = 1; j <= b.length; j++) { const saved = row[j]; row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = saved } } return row[b.length] }
+      function fuzzyScore(name, term) { const limit = term.length < 5 ? 1 : term.length < 9 ? 2 : 3; let best = Infinity; for (const part of [...name.split('-'), name.replaceAll('-', '')]) { const distance = editDistance(term, part); if (distance <= limit) best = Math.min(best, distance * 40 + Math.abs(part.length - term.length)) } return best }
+      function matchScore(name, terms, allowSimilar = false, matchAny = false) { if (!terms.length) return 0; let score = 0, hits = 0; for (const t of terms) { const syns = [t, ...(SYNS[t] || [])]; let best = Infinity; for (let i = 0; i < syns.length; i++) { const x = syns[i].replaceAll('.', '-'); const at = name.indexOf(x); if (at >= 0) best = Math.min(best, at * 1.2 + i * 12 + (name === x ? -24 : 0)) } if (best === Infinity && allowSimilar) best = fuzzyScore(name, t); if (best === Infinity) { if (!matchAny) return -1; continue } hits++; score += best } return hits ? score - (matchAny ? hits * 4 : 0) : -1 }
       const RECOMMENDED = ['airplane', 'airplane.departure', 'suitcase.rolling', 'luggage', 'map', 'mappin.and.ellipse', 'location', 'bed.double', 'calendar', 'cloud.sun', 'sun.max', 'square.on.square', 'plus.square.on.square', 'doc.on.doc', 'slider.horizontal.3', 'slider.vertical.3', 'gearshape', 'square.and.pencil', 'square.and.arrow.up', 'creditcard', 'wallet.pass', 'bell', 'message', 'figure.walk', 'car', 'tram', 'ticket', 'heart', 'person.crop.circle', 'photo', 'backpack', 'globe.americas', 'book', 'star', 'bookmark', 'eye', 'moon.stars', 'checkmark.circle', 'magnifyingglass'].map(x => x.replaceAll('.', '-'));
       const RANK = new Map(RECOMMENDED.map((x, i) => [x, i]));
-      function filter() { const terms = tokensOf($('search').value); const arr = []; for (const name of all) { if (category === 'favorites' && !favorites.has(nativeName(name))) continue; let cat = CAT.find(x => x.id === category); if (cat?.rx && !cat.rx.test(nativeName(name))) continue; const filled = /(-fill)(-|$)/.test(name); if (variant === 'fill' && !filled) continue; if (variant === 'outline' && filled) continue; const s = matchScore(name, terms); if (s < 0) continue; arr.push([name, s]) } const sort = $('sort').value; arr.sort((a, b) => sort === 'az' ? a[0].localeCompare(b[0]) : sort === 'za' ? b[0].localeCompare(a[0]) : terms.length ? (a[1] - b[1] || a[0].length - b[0].length) : ((RANK.get(a[0]) ?? 999) - (RANK.get(b[0]) ?? 999) || a[0].localeCompare(b[0]))); filtered = arr.map(x => x[0]); shown = 0; $('grid').replaceChildren(); $('resultStat').textContent = fmt(filtered.length); const cat = CAT.find(x => x.id === category) || CAT[0]; $('crumb').textContent = cat.label; $('sectionTitle').textContent = terms.length ? 'Resultados de búsqueda' : category === 'all' ? 'Explorar símbolos' : cat.label; $('sectionSubtitle').textContent = fmt(filtered.length) + ' coincidencias · Tocá un ícono para previsualizarlo'; $('empty').hidden = loading || filtered.length > 0; renderMore() }
-      function renderMore() { if (shown >= filtered.length) { $('loadStatus').textContent = filtered.length ? 'Mostrando los ' + fmt(filtered.length) + ' símbolos filtrados' : ''; return } const end = Math.min(shown + CARD_BATCH, filtered.length), frag = document.createDocumentFragment(); for (let i = shown; i < end; i++) { const file = filtered[i], name = nativeName(file), card = document.createElement('article'); card.className = 'symbol-card'; card.tabIndex = 0; card.role = 'button'; card.setAttribute('aria-label', 'Ver ' + name); card.dataset.file = file; const hint = document.createElement('span'); hint.className = 'card-copy'; hint.textContent = '↗ ver'; const holder = document.createElement('div'); holder.className = 'glyph-holder'; const g = document.createElement('span'); g.className = 'glyph'; g.style.setProperty('--icon-size', size + 'px'); holder.append(g); const title = document.createElement('div'); title.className = 'name'; title.textContent = name; const fav = document.createElement('button'); fav.type = 'button'; fav.className = 'fav' + (favorites.has(name) ? ' is-fav' : ''); fav.setAttribute('aria-label', 'Favorito: ' + name); fav.textContent = favorites.has(name) ? '★' : '☆'; fav.addEventListener('click', ev => { ev.stopPropagation(); toggleFav(name); fav.textContent = favorites.has(name) ? '★' : '☆'; fav.classList.toggle('is-fav', favorites.has(name)) }); card.append(hint, fav, holder, title); card.addEventListener('click', () => openDetail(file)); card.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); openDetail(file) } }); frag.append(card); visObs.observe(card) } $('grid').append(frag); shown = end; $('loadStatus').textContent = 'Mostrando ' + fmt(shown) + ' de ' + fmt(filtered.length) + ' · Deslizá para ver más' }
-      function toggleFav(name) { favorites.has(name) ? favorites.delete(name) : favorites.add(name); saveFav(); createNav(); if (category === 'favorites') filter(); if (selected === name) $('favDetail').textContent = favorites.has(name) ? '★ Guardado' : '☆ Favorito' }
+      function filter() { const terms = tokensOf($('search').value); const collect = allowSimilar => { const results = []; for (const name of all) { if (category === 'favorites' && !favorites.has(nativeName(name))) continue; const cat = CAT.find(x => x.id === category); if (cat?.rx && !cat.rx.test(nativeName(name))) continue; const filled = /(-fill)(-|$)/.test(name); if (variant === 'fill' && !filled) continue; if (variant === 'outline' && filled) continue; const score = matchScore(name, terms, allowSimilar, matchMode === 'any'); if (score >= 0) results.push([name, score]) } return results }; let arr = collect(false); showingSimilar = false; if (!arr.length && terms.length) { arr = collect(true); showingSimilar = true } const sort = $('sort').value; arr.sort((a, b) => sort === 'az' ? a[0].localeCompare(b[0]) : sort === 'za' ? b[0].localeCompare(a[0]) : terms.length ? (a[1] - b[1] || a[0].length - b[0].length) : ((RANK.get(a[0]) ?? 999) - (RANK.get(b[0]) ?? 999) || a[0].localeCompare(b[0]))); filtered = arr.map(x => x[0]); shown = 0; $('grid').replaceChildren(); $('resultStat').textContent = fmt(filtered.length); const cat = CAT.find(x => x.id === category) || CAT[0]; $('crumb').textContent = cat.label; $('sectionTitle').textContent = showingSimilar ? 'Iconos similares' : terms.length ? 'Resultados de búsqueda' : category === 'all' ? 'Explorar símbolos' : cat.label; $('sectionSubtitle').textContent = showingSimilar ? 'No hubo coincidencias exactas: mostramos nombres parecidos a tu búsqueda.' : fmt(filtered.length) + ' coincidencias · Clic para copiar · Clic derecho para vista previa'; $('empty').hidden = loading || filtered.length > 0; renderMore() }
+      function renderMore() { updateFilterUI(tokensOf($('search').value)); if (shown >= filtered.length) { $('loadStatus').textContent = filtered.length ? 'Mostrando los ' + fmt(filtered.length) + ' símbolos filtrados' : ''; return } const end = Math.min(shown + CARD_BATCH, filtered.length), frag = document.createDocumentFragment(); for (let i = shown; i < end; i++) { const file = filtered[i], name = nativeName(file), card = document.createElement('article'); card.className = 'symbol-card'; card.tabIndex = 0; card.role = 'button'; card.setAttribute('aria-label', 'Copiar ' + name + '. Clic derecho para vista previa.'); card.title = 'Clic: copiar nombre · Clic derecho: vista previa'; card.dataset.file = file; const hint = document.createElement('span'); hint.className = 'card-copy'; hint.textContent = 'copiar'; const holder = document.createElement('div'); holder.className = 'glyph-holder'; const g = document.createElement('span'); g.className = 'glyph'; g.style.setProperty('--icon-size', size + 'px'); holder.append(g); const title = document.createElement('div'); title.className = 'name'; title.textContent = name; const fav = document.createElement('button'); fav.type = 'button'; fav.className = 'fav' + (favorites.has(name) ? ' is-fav' : ''); fav.setAttribute('aria-label', 'Favorito: ' + name); fav.textContent = favorites.has(name) ? '★' : '☆'; fav.addEventListener('click', ev => { ev.stopPropagation(); toggleFav(name); fav.textContent = favorites.has(name) ? '★' : '☆'; fav.classList.toggle('is-fav', favorites.has(name)) }); card.append(hint, fav, holder, title); card.addEventListener('click', () => copy(name)); card.addEventListener('contextmenu', ev => { ev.preventDefault(); openDetail(file) }); card.addEventListener('keydown', ev => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); copy(name) } if (ev.key === 'F2') { ev.preventDefault(); openDetail(file) } }); frag.append(card); visObs.observe(card) } $('grid').append(frag); shown = end; $('loadStatus').textContent = 'Mostrando ' + fmt(shown) + ' de ' + fmt(filtered.length) + ' · Deslizá para ver más' }
+      function toggleFav(name) { favorites.has(name) ? favorites.delete(name) : favorites.add(name); saveFav(); createNav(); if (category === 'favorites') filter(); if (selected === name) $('favDetail').textContent = favorites.has(name) ? 'Guardado' : 'Guardar' }
       function expoSnippet(name) { return `import { SymbolView } from 'expo-symbols';\n\n<SymbolView\n  name="${name}"\n  size={24}\n  tintColor="#7C95FF"\n/>` }
-      function openDetail(file) { selected = nativeName(file); $('detailName').textContent = selected; $('symbolCode').textContent = selected; $('expoCode').textContent = expoSnippet(selected); $('favDetail').textContent = favorites.has(selected) ? '★ Guardado' : '☆ Favorito'; glyphSrc($('detailGlyph'), file); $('drawer').classList.add('visible'); $('drawer').setAttribute('aria-hidden', 'false'); $('veil').classList.add('visible'); document.body.style.overflow = 'hidden'; $('closeDrawer').focus() }
+      function openDetail(file) { selected = nativeName(file); $('detailName').textContent = selected; $('symbolCode').textContent = selected; $('expoCode').textContent = expoSnippet(selected); $('favDetail').textContent = favorites.has(selected) ? 'Guardado' : 'Guardar'; glyphSrc($('detailGlyph'), file); $('drawer').classList.add('visible'); $('drawer').setAttribute('aria-hidden', 'false'); $('veil').classList.add('visible'); document.body.style.overflow = 'hidden'; $('closeDrawer').focus() }
       function closeDetail() { $('drawer').classList.remove('visible'); $('drawer').setAttribute('aria-hidden', 'true'); $('veil').classList.remove('visible'); document.body.style.overflow = '' }
-      function setTheme(next) { mode = next; document.body.classList.toggle('light', next === 'light'); $('themeToggle').textContent = next === 'light' ? '☀' : '☾'; try { localStorage.setItem('symbol-studio-theme', JSON.stringify(next)) } catch { } }
+      function setTheme(next) { mode = next; const isLight = next === 'light'; document.body.classList.toggle('light', isLight); document.documentElement.style.colorScheme = next; const toggle = $('themeToggle'); toggle.setAttribute('aria-label', isLight ? 'Activar tema oscuro' : 'Activar tema claro'); toggle.setAttribute('aria-pressed', String(!isLight)); toggle.title = toggle.getAttribute('aria-label'); document.querySelector('meta[name="theme-color"]').setAttribute('content', isLight ? '#ffffff' : '#0b0b0c'); try { localStorage.setItem('symbol-studio-theme-v2', JSON.stringify(next)) } catch { } }
       const FALLBACK = Array.from(new Set(STARTER.trim().split(/\s+/).map(x => x.replaceAll('.', '-'))));
       async function loadCatalog() { loading = true; $('netStatus').textContent = 'Cargando catálogo…'; for (const u of CATALOG_URLS) { try { const res = await fetch(u, { cache: 'default' }); if (!res.ok) throw Error('HTTP ' + res.status); const txt = await res.text(); const names = txt.split(/\r?\n/).map(s => s.trim()).filter(s => /^[a-z0-9][a-z0-9._-]*$/.test(s)); if (names.length < 3000) throw Error('Lista incompleta'); all = Array.from(new Set(names)); loadedSource = u; break } catch (err) { console.warn('No disponible:', u, err) } } if (!all.length) { all = FALLBACK; $('netStatus').textContent = 'Modo limitado · Reintentá con internet'; toast('No se pudo cargar el catálogo completo: se muestran ejemplos') } else { $('netStatus').textContent = fmt(all.length) + ' símbolos · en línea' } loading = false; $('totalStat').textContent = fmt(all.length); createNav(); filter() }
       $('search').addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(filter, 110) });
+      $('clearSearch').addEventListener('click', () => { $('search').value = ''; $('search').focus(); filter() });
+      $('resetInline').addEventListener('click', () => { category = 'all'; variant = 'all'; matchMode = 'all'; $('search').value = ''; $('sort').value = 'relevant'; document.querySelectorAll('[data-variant]').forEach(b => b.classList.toggle('active', b.dataset.variant === 'all')); document.querySelectorAll('[data-match]').forEach(b => b.classList.toggle('active', b.dataset.match === 'all')); createNav(); filter(); $('search').focus() });
       $('sort').addEventListener('change', filter);
       document.querySelectorAll('[data-variant]').forEach(b => b.addEventListener('click', () => { variant = b.dataset.variant; document.querySelectorAll('[data-variant]').forEach(x => x.classList.toggle('active', x === b)); filter() }));
+      document.querySelectorAll('[data-match]').forEach(b => b.addEventListener('click', () => { matchMode = b.dataset.match; document.querySelectorAll('[data-match]').forEach(x => x.classList.toggle('active', x === b)); filter() }));
       document.querySelectorAll('.chip').forEach(b => b.addEventListener('click', () => { category = 'all'; $('search').value = b.dataset.query; createNav(); filter(); $('search').focus() }));
       $('previewSize').addEventListener('input', e => { size = Number(e.target.value); document.querySelectorAll('.symbol-card .glyph').forEach(el => el.style.setProperty('--icon-size', size + 'px')) });
       $('themeToggle').addEventListener('click', () => setTheme(mode === 'dark' ? 'light' : 'dark'));
       $('closeDrawer').addEventListener('click', closeDetail); $('veil').addEventListener('click', closeDetail);
       $('copyName').addEventListener('click', () => selected && copy(selected)); $('copyExpo').addEventListener('click', () => selected && copy(expoSnippet(selected)));
       $('favDetail').addEventListener('click', () => { if (!selected) return; toggleFav(selected); document.querySelectorAll('.symbol-card').forEach(card => { if (nativeName(card.dataset.file) === selected) { const b = card.querySelector('.fav'); b.textContent = favorites.has(selected) ? '★' : '☆'; b.classList.toggle('is-fav', favorites.has(selected)) } }) });
-      $('resetFilters').addEventListener('click', () => { category = 'all'; variant = 'all'; $('search').value = ''; $('sort').value = 'relevant'; document.querySelectorAll('[data-variant]').forEach(b => b.classList.toggle('active', b.dataset.variant === 'all')); createNav(); filter() });
+      $('resetFilters').addEventListener('click', () => { category = 'all'; variant = 'all'; matchMode = 'all'; $('search').value = ''; $('sort').value = 'relevant'; document.querySelectorAll('[data-variant]').forEach(b => b.classList.toggle('active', b.dataset.variant === 'all')); document.querySelectorAll('[data-match]').forEach(b => b.classList.toggle('active', b.dataset.match === 'all')); createNav(); filter() });
       document.addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); closeDetail(); $('search').focus(); $('search').select() } if (e.key === 'Escape') { if ($('drawer').classList.contains('visible')) closeDetail(); else { $('search').blur() } } });
-      moreObs.observe($('sentinel')); saveFav(); setTheme(mode); createNav(); all = FALLBACK; $('totalStat').textContent = '…'; loading = true; filter(); loadCatalog();
+      moreObs.observe($('sentinel')); saveFav(); setTheme(mode); createTopicSelect(); createNav(); all = FALLBACK; $('totalStat').textContent = '…'; loading = true; filter(); loadCatalog();
     })();
   </script>
 </body>
